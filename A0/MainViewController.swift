@@ -13,21 +13,23 @@ class MainViewController: UIViewController, ActionDelegate {
     var tableView: UITableView!
     var actions: [[String]]!
     
-    let testActions = [
-        ["1", "1", "Action 1", "goal", "result", "conclusion"],
-        ["2", "0", "Action 2", "goal", "result", "conclusion"],
-        ["3", "2", "Action 3", "goal", "result", "conclusion"],
-        ["4", "1", "Action 4", "goal", "result", "conclusion"],
-        ["5", "0", "Action 5", "goal", "result", "conclusion"],
-    ]
+    override func prefersStatusBarHidden() -> Bool {
+        return false
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.whiteColor()
-        title = "Actions"
+        title = " "
         
-        let savedActions = getAllActions()
-        actions = savedActions.count == 0 ? testActions : savedActions
+        let titleLabel = UILabel(frame: CGRectMake(0, 0, ScreenWidth - 60, 44))
+        titleLabel.textColor = UIColor.whiteColor()
+        titleLabel.font = UIFont.boldSystemFontOfSize(17)
+        titleLabel.text = "GOAL OUTCOME LESSON"
+        let titleItem = UIBarButtonItem(customView: titleLabel)
+        navigationItem.leftBarButtonItem = titleItem
+        
+        actions = getAllActions()
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addButtonTapped))
         navigationItem.rightBarButtonItem = addButton
@@ -36,6 +38,10 @@ class MainViewController: UIViewController, ActionDelegate {
         tableView.separatorStyle = .None
         tableView.dataSource = self
         tableView.delegate = self
+        let marginView = UIView(frame: CGRectMake(0, 0, ScreenWidth, 5))
+        marginView.backgroundColor = tableView.backgroundColor
+        tableView.tableHeaderView = marginView
+        tableView.tableFooterView = marginView
         view.addSubview(tableView)
     }
     
@@ -56,7 +62,7 @@ class MainViewController: UIViewController, ActionDelegate {
                 detailVC.detailType = .Add
                 detailVC.action = ["", "0", name, "", "", ""]
                 detailVC.delegate = self
-                self.presentViewController(UINavigationController(rootViewController: detailVC), animated: true, completion: nil)
+                self.presentViewController(NavigationController(rootViewController: detailVC), animated: true, completion: nil)
             }
         }
         

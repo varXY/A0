@@ -13,24 +13,25 @@ class ContentLabel: UILabel {
     var status: String!
     
     init(text: String, status: String) {
-        super.init(frame: CGRectMake(5, 2.5, ScreenWidth - 10, 60))
+        super.init(frame: CGRectMake(10, 5, ScreenWidth - 20, 100))
         self.status = status
         self.numberOfLines = 0
         self.textAlignment = .Center
         self.font = UIFont.systemFontOfSize(17)
-        self.textColor = text == "" ? UIColor.colorOfStatus(status) : UIColor.blackColor()
-        self.text = text == "" ? "Tapp To Add" : text
+        self.textColor = UIColor.colorOfStatus(status)
+        self.text = text == "" ? "Tapp To Add\n" : text
         self.sizeToFit()
         self.center.x = ScreenWidth / 2
+        if text == "" { self.frame.size.height = 100 }
     }
     
     func setContent(text: String) {
         self.frame.size.width = ScreenWidth - 10
         self.textColor = text == "" ? UIColor.colorOfStatus(status) : UIColor.blackColor()
-        self.text = text == "" ? "Tapp To Add" : text
+        self.text = text == "" ? "Tapp To Add\n" : text
         self.sizeToFit()
         self.center.x = ScreenWidth / 2
-        print(frame.width)
+        if text == "" { self.frame.size.height = 100 }
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -10,11 +10,15 @@ import UIKit
 
 extension UIColor {
     
+    class func colorInCode(code: [CGFloat]) -> UIColor {
+        return UIColor(red: code[0]/255, green: code[1]/255, blue: code[2]/255, alpha: code[3])
+    }
+    
     class func colorOfStatus(status: String!) -> UIColor {
         switch status {
-        case "0": return UIColor.redColor()
-        case "1": return UIColor.greenColor()
-        case "2": return UIColor.grayColor()
+        case "0": return MyColor.code(24).BTColors[0]
+        case "1": return MyColor.code(22).BTColors[0]
+        case "2": return MyColor.code(5).BTColors[0]
         default: return UIColor.whiteColor()
         }
     }

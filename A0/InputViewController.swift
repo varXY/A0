@@ -18,8 +18,8 @@ class InputViewController: UIViewController {
 		didSet {
 			switch index {
 			case 0: leftTitle = "GOALS"
-            case 1: leftTitle = "RESULTS"
-			case 2: leftTitle = "CONCLUSION"
+            case 1: leftTitle = "OUTCOMES"
+			case 2: leftTitle = "LESSONS"
 			default: break
 			}
 		}
@@ -36,16 +36,22 @@ class InputViewController: UIViewController {
 	let elementAlpha: CGFloat = 0.6
 
 	weak var delegate: InputViewControllerDelegate?
-
+    
+    var hideStatusBar = false
+    
 	override func prefersStatusBarHidden() -> Bool {
-		return true
+		return hideStatusBar
 	}
-
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = UIColor.whiteColor()
 
-		titleLabel = UILabel(frame: CGRectMake(0, 0, ScreenWidth - 60, 60))
+		titleLabel = UILabel(frame: CGRectMake(10, 0, ScreenWidth - 70, 60))
 		titleLabel.backgroundColor = UIColor.clearColor()
 		titleLabel.textColor = UIColor.blackColor()
 		titleLabel.alpha = elementAlpha
@@ -56,6 +62,7 @@ class InputViewController: UIViewController {
         
         let doneButton = UIButton(type: .System)
         doneButton.frame = CGRectMake(ScreenWidth - 50, 10, 40, 40)
+        doneButton.tintColor = UIColor.blackColor()
         doneButton.setTitle("Done", forState: .Normal)
         doneButton.addTarget(self, action: #selector(doneEditing), forControlEvents: .TouchUpInside)
         doneButton.exclusiveTouch = true
@@ -79,12 +86,17 @@ class InputViewController: UIViewController {
 		super.viewWillAppear(animated)
 		textView.text = oldText
 		if ScreenWidth != 320 { textView.becomeFirstResponder() }
+        
+        UIView.animateWithDuration(0.3) {
+            self.hideStatusBar = true
+            self.setNeedsStatusBarAppearanceUpdate()
+        }
 	}
 
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 		if ScreenWidth == 320 { textView.becomeFirstResponder() }
-	}
+        	}
     
     func doneEditing() {
         textView.resignFirstResponder()

@@ -36,7 +36,8 @@ class DetailViewController: UIViewController, ActionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.whiteColor()
-        navigationController?.navigationBar.barTintColor = UIColor.colorOfStatus(action[1])
+        guard let navi = self.navigationController as? NavigationController else { return }
+        navi.setbackgoundColorImage(UIColor.colorOfStatus(action[1]))
         title = action[2]
         
         if detailType == .Add {
@@ -44,7 +45,7 @@ class DetailViewController: UIViewController, ActionDelegate {
             navigationItem.rightBarButtonItem = quitButton
             
             textView = UITextView(frame: CGRectMake(5, 2.5, ScreenWidth - 10, cellHeight - 5))
-            textView.font = UIFont.systemFontOfSize(17)
+            textView.font = UIFont.systemFontOfSize(25)
             textView.textAlignment = .Center
             textView.delegate = self
         } else {
@@ -62,7 +63,11 @@ class DetailViewController: UIViewController, ActionDelegate {
         tableView.separatorStyle = .None
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.scrollEnabled = detailType == .See
+        let marginView = UIView(frame: CGRectMake(0, 0, ScreenWidth, 15))
+        marginView.backgroundColor = tableView.backgroundColor
+        tableView.tableHeaderView = marginView
+        tableView.tableFooterView = marginView
+//        tableView.scrollEnabled = detailType == .See
         view.addSubview(tableView)
     }
     
@@ -86,9 +91,9 @@ class DetailViewController: UIViewController, ActionDelegate {
     func changeStatus() {
         let alertController = UIAlertController(title: "Change Status", message: nil, preferredStyle: .ActionSheet)
         let actions = [
-            UIAlertAction(title: "Not Start Yet", style: .Default) { (_) in self.statusChanged("0") },
-            UIAlertAction(title: "In Progress", style: .Default) { (_) in self.statusChanged("1") },
-            UIAlertAction(title: "Done", style: .Default) { (_) in self.statusChanged("2") },
+            UIAlertAction(title: "PLANING", style: .Default) { (_) in self.statusChanged("0") },
+            UIAlertAction(title: "DOING", style: .Default) { (_) in self.statusChanged("1") },
+            UIAlertAction(title: "DONE", style: .Default) { (_) in self.statusChanged("2") },
             UIAlertAction(title: "Cancel", style: .Cancel) { (_) in self.statusChanged(self.action[1]) }
         ]
         
@@ -98,8 +103,13 @@ class DetailViewController: UIViewController, ActionDelegate {
     
     func statusChanged(status: String) {
         action[1] = status
-        navigationController?.navigationBar.barTintColor = UIColor.colorOfStatus(action[1])
+        guard let navi = self.navigationController as? NavigationController else { return }
+        navi.setbackgoundColorImage(UIColor.colorOfStatus(action[1]))
+//        navigationController?.navigationBar.barTintColor = UIColor.colorOfStatus(action[1])
         tableView.reloadData()
+        
+        editAction(action)
+        delegate?.actionDidSave()
     }
 }
 
@@ -119,18 +129,21 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
         return detailType == .Add ? cellHeight : contentLabels[indexPath.section].frame.height + 5
     }
     
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
+    
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return ["GOALS", "RESULTS", "CONCLUSION"][section]
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let label = UILabel(frame: CGRectMake(0, 0, 20, ScreenWidth))
+        let label = UILabel(frame: CGRectMake(0, 0, 30, ScreenWidth))
         label.backgroundColor = UIColor.clearColor()
         label.textColor = UIColor.lightGrayColor()
         label.font = UIFont.systemFontOfSize(14)
         label.textAlignment = .Center
-        label.text = ["GOALS", "RESULTS", "CONCLUSION"][section]
-        
+        label.text = ["GOALS", "OUTCOMES", "LESSONS"][section]
         return label
     }
     

@@ -17,6 +17,8 @@ protocol ActionDelegate {
     func getAllActions() -> [[String]]
     func saveAction(content: [String], done: () -> ())
     func editAction(content: [String])
+    func deleteAction(content: [String])
+    
 }
 
 extension ActionDelegate {
@@ -47,13 +49,27 @@ extension ActionDelegate {
         }
         
         print("get \(actions.count) saved actions")
+        
+        if actions.count == 0 {
+            let preloadActions = [
+                ["1", "1", "Action 1", "goal", "result", "conclusion"],
+                ["2", "0", "Action 2", "goal", "result", "conclusion"],
+                ["3", "2", "Action 3", "goal", "result", "conclusion"],
+                ["4", "1", "Action 4", "goal", "result", "conclusion"],
+                ["5", "0", "Action 5", "goal", "result", "conclusion"],
+            ]
+            preloadActions.forEach({ saveAction($0, done: {}) })
+            
+            return preloadActions
+        }
+        
         return actions
     }
     
     func saveAction(content: [String], done: () -> ()) {
         let entity = NSEntityDescription.entityForName("Action", inManagedObjectContext: managedContext)
         let action = Action(entity: entity!, insertIntoManagedObjectContext: managedContext)
-        action.id = NSDate().dateID() as NSNumber
+        action.id = content[0] == "" ? NSDate().dateID() as NSNumber : Int(content[0])! as NSNumber
         action.status = Int(content[1])! as NSNumber
         action.name = content[2]
         action.goal = content[3]
@@ -93,6 +109,30 @@ extension ActionDelegate {
             print("can't edit existed action")
         }
     }
+    
+    func deleteAction(content: [String]) {
+        let fetchRequest = NSFetchRequest(entityName: "Action")
+        fetchRequest.entity = NSEntityDescription.entityForName("Action", inManagedObjectContext: managedContext)
+        fetchRequest.predicate = NSPredicate(format: "id == %@", Int(content[0])! as NSNumber)
+        
+        do {
+            if let actions = try managedContext.executeFetchRequest(fetchRequest) as? [NSManagedObject] {
+                if actions.count != 0 {
+                    managedContext.deleteObject(actions[0])
+                }
+            }
+        } catch {
+            print("can't get actions for deleting")
+        }
+        
+        do {
+            try managedContext.save()
+            print("action deleted")
+        } catch {
+            print("can't delete action")
+        }
+    }
+    
     
 }
 
