@@ -63,6 +63,7 @@ extension ActionDelegate {
             return preloadActions
         }
         
+        actions = actions.reverse()
         return actions
     }
     

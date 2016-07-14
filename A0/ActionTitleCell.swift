@@ -29,6 +29,17 @@ class ActionTitleCell: UITableViewCell {
     func configureCell(action: [String]) {
         titleLabel.backgroundColor = UIColor.colorOfStatus(action[1])
         titleLabel.text = action[2]
+        
+//        var bgColorCode = 0
+//        switch action[1] {
+//        case "0": bgColorCode = 14
+//        case "1": bgColorCode = 12
+//        case "2": bgColorCode = 5
+//        default: break
+//        }
+        
+        selectedBackgroundView = UIView()
+        selectedBackgroundView!.backgroundColor = titleLabel.backgroundColor
     }
     
     

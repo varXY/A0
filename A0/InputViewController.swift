@@ -27,76 +27,48 @@ class InputViewController: UIViewController {
 
 	var oldText = ""
 	var leftTitle = ""
-	var newLimit = 0
-	var titleLabel: UILabel!
 	var textView: UITextView!
-
-	var allowInput = true
-
-	let elementAlpha: CGFloat = 0.6
 
 	weak var delegate: InputViewControllerDelegate?
     
-    var hideStatusBar = false
-    
-	override func prefersStatusBarHidden() -> Bool {
-		return hideStatusBar
-	}
-    
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
-    }
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = UIColor.whiteColor()
+        navigationController?.navigationBar.barTintColor = UIColor.colorOfStatus("\(index)")
 
-		titleLabel = UILabel(frame: CGRectMake(10, 0, ScreenWidth - 70, 60))
-		titleLabel.backgroundColor = UIColor.clearColor()
-		titleLabel.textColor = UIColor.blackColor()
-		titleLabel.alpha = elementAlpha
-		titleLabel.textAlignment = .Left
-		titleLabel.font = UIFont.boldSystemFontOfSize(28)
-		titleLabel.text = leftTitle
-		view.addSubview(titleLabel)
+        let titleItem = UIBarButtonItem(customView: TitleLabel(text: leftTitle))
+        navigationItem.leftBarButtonItem = titleItem
         
-        let doneButton = UIButton(type: .System)
-        doneButton.frame = CGRectMake(ScreenWidth - 50, 10, 40, 40)
-        doneButton.tintColor = UIColor.blackColor()
-        doneButton.setTitle("Done", forState: .Normal)
-        doneButton.addTarget(self, action: #selector(doneEditing), forControlEvents: .TouchUpInside)
-        doneButton.exclusiveTouch = true
-        view.addSubview(doneButton)
-        
+        let barButtonstyle: UIBarButtonSystemItem = oldText == "" ? .Stop : .Done
+        let doneButton = UIBarButtonItem(barButtonSystemItem: barButtonstyle, target: self, action: #selector(doneEditing))
+        navigationItem.rightBarButtonItem = doneButton
 
 		let factor: CGFloat = ScreenHeight != 480 ? 0.38 : 0.3
-		textView = UITextView(frame: CGRectMake(0, 60, ScreenWidth, ScreenHeight * factor))
+		textView = UITextView(frame: CGRectMake(0, 15, ScreenWidth, ScreenHeight * factor + 45))
 		textView.backgroundColor = UIColor.clearColor()
-		textView.tintColor = UIColor.blackColor()
-		textView.textColor = UIColor.blackColor()
-		textView.font = UIFont.systemFontOfSize(25)
-		textView.textAlignment = .Center
+		textView.tintColor = UIColor.colorOfStatus("\(index)")
+//		textView.textColor = UIColor.blackColor()
+//		textView.font = UIFont.systemFontOfSize(25)
+//		textView.textAlignment = .Center
 		textView.textContainerInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
 		textView.delegate = self
 		view.addSubview(textView)
+        
+        textView.attributedText = textWithStyle(oldText, colorStatus: "\(index)")
+        textView.scrollRangeToVisible(NSMakeRange(textView.attributedText.length - 1, textView.attributedText.length))
+        textView.typingAttributes = textAttributes("\(index)")
 
 	}
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		textView.text = oldText
-		if ScreenWidth != 320 { textView.becomeFirstResponder() }
-        
-        UIView.animateWithDuration(0.3) {
-            self.hideStatusBar = true
-            self.setNeedsStatusBarAppearanceUpdate()
-        }
 	}
 
 	override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
-		if ScreenWidth == 320 { textView.becomeFirstResponder() }
-        	}
+		textView.becomeFirstResponder()
+    }
     
     func doneEditing() {
         textView.resignFirstResponder()
@@ -116,8 +88,8 @@ class InputViewController: UIViewController {
 
 	func back() {
         delegate?.inputTextViewDidReturn(index, text: textView.text)
+        textView.resignFirstResponder()
         dismissViewControllerAnimated(true, completion: nil)
-		
 	}
 
 }
@@ -125,21 +97,16 @@ class InputViewController: UIViewController {
 extension InputViewController: UITextViewDelegate {
 
 	func textViewDidChange(textView: UITextView) {
-
+        if textView.text != "" {
+            let quitButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(back))
+            navigationItem.rightBarButtonItem = quitButton
+        } else {
+            let quitButton = UIBarButtonItem(barButtonSystemItem: .Stop, target: self, action: #selector(back))
+            navigationItem.rightBarButtonItem = quitButton
+        }
 	}
 
 	func textViewDidEndEditing(textView: UITextView) {
 		delay(seconds: 1.5) { self.addBackButton() }
-	}
-}
-
-extension InputViewController: UIViewControllerTransitioningDelegate {
-
-	func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		return BounceAnimationController()
-	}
-
-	func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		return FadeOutAnimationController()
 	}
 }

@@ -15,24 +15,19 @@ class ContentLabel: UILabel {
     init(text: String, status: String) {
         super.init(frame: CGRectMake(10, 5, ScreenWidth - 20, 100))
         self.status = status
-        self.numberOfLines = 0
-        self.textAlignment = .Center
-        self.font = UIFont.systemFontOfSize(17)
-        self.textColor = UIColor.colorOfStatus(status)
-        self.text = text == "" ? "Tapp To Add\n" : text
-        self.sizeToFit()
-        self.center.x = ScreenWidth / 2
-        if text == "" { self.frame.size.height = 100 }
+        numberOfLines = 0
+        setContent(text)
     }
     
     func setContent(text: String) {
-        self.frame.size.width = ScreenWidth - 10
-        self.textColor = text == "" ? UIColor.colorOfStatus(status) : UIColor.blackColor()
-        self.text = text == "" ? "Tapp To Add\n" : text
-        self.sizeToFit()
-        self.center.x = ScreenWidth / 2
-        if text == "" { self.frame.size.height = 100 }
+        self.attributedText = text == "" ? textWithStyle("Tapp To Add", colorStatus: status) : textWithStyle(text, colorStatus: status)
+        frame.size.width = ScreenWidth - 20
+        sizeToFit()
+        center.x = ScreenWidth / 2
+        if frame.size.height < 100 { frame.size.height = 100 }
     }
+    
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

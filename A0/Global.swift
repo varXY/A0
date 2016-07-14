@@ -23,3 +23,36 @@ func delay(seconds seconds: Double, completion: () -> ()) {
         completion()
     }
 }
+
+func textWithStyle(text: String, colorStatus: String) -> NSMutableAttributedString {
+//    let style = NSMutableParagraphStyle()
+//    style.lineSpacing = 12
+//    style.alignment = NSTextAlignment.Center
+//    let result = NSMutableAttributedString(string: text, attributes: [NSParagraphStyleAttributeName: style])
+//    result.addAttributes([NSForegroundColorAttributeName: colorStatus], range: NSMakeRange(0, result.length))
+//    result.addAttributes([NSFontAttributeName: UIFont.systemFontOfSize(17)], range: NSMakeRange(0, result.length))
+    let attributedText = NSMutableAttributedString(string: text)
+    attributedText.addAttributes(textAttributes(colorStatus), range: NSMakeRange(0, attributedText.length))
+    return attributedText
+}
+
+
+func textAttributes(colorStatus: String) -> [String: AnyObject] {
+    let textAttributes = [
+        NSParagraphStyleAttributeName: textStyle(),
+        NSForegroundColorAttributeName: UIColor.colorOfStatus(colorStatus),
+        NSFontAttributeName: UIFont.systemFontOfSize(17)
+    ]
+    
+    return textAttributes
+}
+
+
+func textStyle() -> NSMutableParagraphStyle {
+    let style = NSMutableParagraphStyle()
+    style.lineSpacing = 12
+    style.alignment = NSTextAlignment.Center
+    return style
+}
+
+

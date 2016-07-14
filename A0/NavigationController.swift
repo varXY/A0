@@ -26,9 +26,8 @@ class NavigationController: UINavigationController {
         ]
 		navigationBar.translucent = false
 
-		setbackgoundColorImage(UIColor.colorOfStatus("0"))
-        
-    //		self.navigationBar.shadowImage = UIImage.imageWithColor(UIColor.clearColor(), rect: CGRectMake(0, 0, 10, 10))
+//		setbackgoundColorImage(UIColor.colorOfStatus("0"))
+//      navigationBar.shadowImage = UIImage.imageWithColor(UIColor.clearColor(), rect: CGRectMake(0, 0, 10, 10))
 
     }
     

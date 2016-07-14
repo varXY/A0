@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		A8272C8C1D372EFD00E69949 /* UINavigationController+FDFullscreenPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = A8272C8B1D372EFD00E69949 /* UINavigationController+FDFullscreenPopGesture.m */; };
 		A8272C8E1D37352400E69949 /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8272C8D1D37352400E69949 /* UIImage+.swift */; };
+		A8272C901D3757E200E69949 /* TitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8272C8F1D3757E200E69949 /* TitleLabel.swift */; };
+		A8272C921D37724100E69949 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8272C911D37724100E69949 /* UserDefaults.swift */; };
 		A8A937251D35F53500C1AA6D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A937241D35F53500C1AA6D /* AppDelegate.swift */; };
 		A8A937271D35F53500C1AA6D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A937261D35F53500C1AA6D /* MainViewController.swift */; };
 		A8A9372D1D35F53500C1AA6D /* A0.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A8A9372B1D35F53500C1AA6D /* A0.xcdatamodeld */; };
@@ -35,6 +37,8 @@
 		A8272C8A1D372EFD00E69949 /* UINavigationController+FDFullscreenPopGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FDFullscreenPopGesture.h"; sourceTree = "<group>"; };
 		A8272C8B1D372EFD00E69949 /* UINavigationController+FDFullscreenPopGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FDFullscreenPopGesture.m"; sourceTree = "<group>"; };
 		A8272C8D1D37352400E69949 /* UIImage+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
+		A8272C8F1D3757E200E69949 /* TitleLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleLabel.swift; sourceTree = "<group>"; };
+		A8272C911D37724100E69949 /* UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		A8A937211D35F53500C1AA6D /* A0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = A0.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8A937241D35F53500C1AA6D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A8A937261D35F53500C1AA6D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -107,6 +111,8 @@
 		A8A937391D35F6F000C1AA6D /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				A8A937611D371BE700C1AA6D /* MyColor.swift */,
+				A8272C911D37724100E69949 /* UserDefaults.swift */,
 				A8A937401D35F8A600C1AA6D /* ActionDelegate.swift */,
 				A8A937421D35FCBA00C1AA6D /* Action+CoreDataProperties.swift */,
 				A8A937431D35FCBA00C1AA6D /* Action.swift */,
@@ -138,7 +144,6 @@
 				A8A937491D35FDA000C1AA6D /* NSdate+.swift */,
 				A8272C8D1D37352400E69949 /* UIImage+.swift */,
 				A8A9374E1D3603D000C1AA6D /* UIColor+.swift */,
-				A8A937611D371BE700C1AA6D /* MyColor.swift */,
 				A8272C8A1D372EFD00E69949 /* UINavigationController+FDFullscreenPopGesture.h */,
 				A8272C8B1D372EFD00E69949 /* UINavigationController+FDFullscreenPopGesture.m */,
 				A8272C891D372EFD00E69949 /* A0-Bridging-Header.h */,
@@ -149,6 +154,7 @@
 		A8A9374B1D36021E00C1AA6D /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A8272C8F1D3757E200E69949 /* TitleLabel.swift */,
 				A8A9374C1D36024000C1AA6D /* ActionTitleCell.swift */,
 				A8A937541D361E6800C1AA6D /* ContentLabel.swift */,
 			);
@@ -239,6 +245,7 @@
 				A8A9372D1D35F53500C1AA6D /* A0.xcdatamodeld in Sources */,
 				A8A9374D1D36024000C1AA6D /* ActionTitleCell.swift in Sources */,
 				A8A937571D36236A00C1AA6D /* InputViewController.swift in Sources */,
+				A8272C921D37724100E69949 /* UserDefaults.swift in Sources */,
 				A8A937641D371E8B00C1AA6D /* NavigationController.swift in Sources */,
 				A8A937551D361E6800C1AA6D /* ContentLabel.swift in Sources */,
 				A8A937451D35FCBA00C1AA6D /* Action.swift in Sources */,
@@ -247,6 +254,7 @@
 				A8A937251D35F53500C1AA6D /* AppDelegate.swift in Sources */,
 				A8A9375D1D36238800C1AA6D /* BounceAnimationController.swift in Sources */,
 				A8272C8C1D372EFD00E69949 /* UINavigationController+FDFullscreenPopGesture.m in Sources */,
+				A8272C901D3757E200E69949 /* TitleLabel.swift in Sources */,
 				A8A937441D35FCBA00C1AA6D /* Action+CoreDataProperties.swift in Sources */,
 				A8A937411D35F8A600C1AA6D /* ActionDelegate.swift in Sources */,
 				A8A937621D371BE700C1AA6D /* MyColor.swift in Sources */,

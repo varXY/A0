@@ -8,17 +8,14 @@
 
 import UIKit
 
-enum DetailType {
-    case Add, See
-}
 
 protocol DetailViewControllerDelegate: class {
     func actionDidSave()
 }
 
-class DetailViewController: UIViewController, ActionDelegate {
+
+class DetailViewController: UIViewController, ActionDelegate, UserDefaults {
     
-    var detailType: DetailType!
     var action: [String]!
     
     var textView: UITextView!
@@ -36,45 +33,32 @@ class DetailViewController: UIViewController, ActionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.whiteColor()
-        guard let navi = self.navigationController as? NavigationController else { return }
-        navi.setbackgoundColorImage(UIColor.colorOfStatus(action[1]))
+        navigationController?.navigationBar.barTintColor = UIColor.colorOfStatus(action[1])
+        saveColorStatusOfBar(action[1])
         title = action[2]
         
-        if detailType == .Add {
-            let quitButton = UIBarButtonItem(barButtonSystemItem: .Stop, target: self, action: #selector(quit))
-            navigationItem.rightBarButtonItem = quitButton
-            
-            textView = UITextView(frame: CGRectMake(5, 2.5, ScreenWidth - 10, cellHeight - 5))
-            textView.font = UIFont.systemFontOfSize(25)
-            textView.textAlignment = .Center
-            textView.delegate = self
-        } else {
-            let statusButton = UIBarButtonItem(title: action[1], style: .Plain, target: self, action: #selector(changeStatus))
-            navigationItem.rightBarButtonItem = statusButton
-            
-            contentLabels = [3, 4, 5].map({
-                return ContentLabel(text: action[$0], status: String($0 - 3))
-            })
-        }
+//        let titleItem = UIBarButtonItem(customView: TitleLabel(text: action[2]))
+//        navigationItem.leftBarButtonItem = titleItem
         
+        let statusButton = UIBarButtonItem(title: action[1], style: .Plain, target: self, action: #selector(changeStatus))
+        navigationItem.rightBarButtonItem = statusButton
         
-        
+        contentLabels = [3, 4, 5].map({
+            return ContentLabel(text: action[$0], status: String($0 - 3))
+        })
+   
         tableView = UITableView(frame: view.bounds)
+        tableView.frame.size.height -= 64
         tableView.separatorStyle = .None
         tableView.dataSource = self
         tableView.delegate = self
-        let marginView = UIView(frame: CGRectMake(0, 0, ScreenWidth, 15))
+        let marginView = UIView(frame: CGRectMake(0, 0, ScreenWidth, 10))
         marginView.backgroundColor = tableView.backgroundColor
         tableView.tableHeaderView = marginView
         tableView.tableFooterView = marginView
-//        tableView.scrollEnabled = detailType == .See
         view.addSubview(tableView)
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        if detailType == .Add { textView.becomeFirstResponder() }
-    }
     
     func quit() {
         dismissViewControllerAnimated(true, completion: nil)
@@ -103,9 +87,7 @@ class DetailViewController: UIViewController, ActionDelegate {
     
     func statusChanged(status: String) {
         action[1] = status
-        guard let navi = self.navigationController as? NavigationController else { return }
-        navi.setbackgoundColorImage(UIColor.colorOfStatus(action[1]))
-//        navigationController?.navigationBar.barTintColor = UIColor.colorOfStatus(action[1])
+        navigationController?.navigationBar.barTintColor = UIColor.colorOfStatus(action[1])
         tableView.reloadData()
         
         editAction(action)
@@ -117,7 +99,6 @@ class DetailViewController: UIViewController, ActionDelegate {
 extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        if detailType == .Add { return 1 }
         return Int(action[1])! + 1
     }
     
@@ -126,10 +107,14 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return detailType == .Add ? cellHeight : contentLabels[indexPath.section].frame.height + 5
+        return contentLabels[indexPath.section].frame.height + 5
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 30
     }
     
@@ -139,7 +124,7 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label = UILabel(frame: CGRectMake(0, 0, 30, ScreenWidth))
-        label.backgroundColor = UIColor.clearColor()
+        label.backgroundColor = tableView.backgroundColor
         label.textColor = UIColor.lightGrayColor()
         label.font = UIFont.systemFontOfSize(14)
         label.textAlignment = .Center
@@ -147,27 +132,25 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
         return label
     }
     
+    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = UIView(frame: CGRectMake(0, 0, 30, ScreenWidth))
+        view.backgroundColor = tableView.backgroundColor
+        return view
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .Default, reuseIdentifier: nil)
-        
-        if detailType == .Add {
-            cell.contentView.addSubview(textView)
-        } else {
-            cell.contentView.addSubview(contentLabels[indexPath.section])
-        }
-        
+        cell.contentView.addSubview(contentLabels[indexPath.section])
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let inputVC = InputViewController()
-        inputVC.modalPresentationStyle = .Custom
-        inputVC.transitioningDelegate = inputVC
         inputVC.index = indexPath.section
         inputVC.oldText = action[indexPath.section + 3]
         inputVC.delegate = self
-        presentViewController(inputVC, animated: true, completion: nil)
+        presentViewController(NavigationController(rootViewController: inputVC), animated: true, completion: nil)
     }
 }
 
@@ -183,15 +166,4 @@ extension DetailViewController: InputViewControllerDelegate {
     }
 }
 
-extension DetailViewController: UITextViewDelegate {
-    
-    func textViewDidChange(textView: UITextView) {
-        if textView.text != "" {
-            let quitButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(saveAndQuit))
-            navigationItem.rightBarButtonItem = quitButton
-        } else {
-            let quitButton = UIBarButtonItem(barButtonSystemItem: .Stop, target: self, action: #selector(quit))
-            navigationItem.rightBarButtonItem = quitButton
-        }
-    }
-}
+
