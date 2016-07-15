@@ -18,7 +18,7 @@ class MainViewController: UIViewController, ActionDelegate, UserDefaults {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.backgroundColor()
         navigationController?.navigationBar.barTintColor = UIColor.colorOfStatus(getColorStatusOfBar())
         title = " "
         
@@ -31,6 +31,7 @@ class MainViewController: UIViewController, ActionDelegate, UserDefaults {
         actions = getAllActions()
         
         tableView = UITableView(frame: view.bounds)
+        tableView.backgroundColor = UIColor.backgroundColor()
         tableView.frame.size.height -= 64
         tableView.separatorStyle = .None
         tableView.dataSource = self

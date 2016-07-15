@@ -22,4 +22,8 @@ extension UIColor {
         default: return UIColor.whiteColor()
         }
     }
+    
+    class func backgroundColor() -> UIColor {
+        return UIColor(red: 236/255, green: 235/255, blue: 243/255, alpha: 1.0)
+    }
 }

@@ -17,9 +17,9 @@ class InputViewController: UIViewController {
 	var index: Int! {
 		didSet {
 			switch index {
-			case 0: leftTitle = "GOALS"
-            case 1: leftTitle = "OUTCOMES"
-			case 2: leftTitle = "LESSONS"
+			case 0: leftTitle = "GOAL"
+            case 1: leftTitle = "OUTCOME"
+			case 2: leftTitle = "LESSON"
 			default: break
 			}
 		}
@@ -34,14 +34,13 @@ class InputViewController: UIViewController {
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = UIColor.whiteColor()
+		view.backgroundColor = UIColor.backgroundColor()
         navigationController?.navigationBar.barTintColor = UIColor.colorOfStatus("\(index)")
 
         let titleItem = UIBarButtonItem(customView: TitleLabel(text: leftTitle))
         navigationItem.leftBarButtonItem = titleItem
         
-        let barButtonstyle: UIBarButtonSystemItem = oldText == "" ? .Stop : .Done
-        let doneButton = UIBarButtonItem(barButtonSystemItem: barButtonstyle, target: self, action: #selector(doneEditing))
+        let doneButton = UIBarButtonItem(image: UIImage(named: "down"), style: .Plain, target: self, action: #selector(doneEditing))
         navigationItem.rightBarButtonItem = doneButton
 
 		let factor: CGFloat = ScreenHeight != 480 ? 0.38 : 0.3
@@ -97,13 +96,13 @@ class InputViewController: UIViewController {
 extension InputViewController: UITextViewDelegate {
 
 	func textViewDidChange(textView: UITextView) {
-        if textView.text != "" {
-            let quitButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(back))
-            navigationItem.rightBarButtonItem = quitButton
-        } else {
-            let quitButton = UIBarButtonItem(barButtonSystemItem: .Stop, target: self, action: #selector(back))
-            navigationItem.rightBarButtonItem = quitButton
-        }
+//        if textView.text != "" {
+//            let quitButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(back))
+//            navigationItem.rightBarButtonItem = quitButton
+//        } else {
+//            let quitButton = UIBarButtonItem(barButtonSystemItem: .Stop, target: self, action: #selector(back))
+//            navigationItem.rightBarButtonItem = quitButton
+//        }
 	}
 
 	func textViewDidEndEditing(textView: UITextView) {

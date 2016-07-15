@@ -21,9 +21,7 @@ class DetailViewController: UIViewController, ActionDelegate, UserDefaults {
     var textView: UITextView!
     var contentLabels: [ContentLabel]!
     var tableView: UITableView!
-    
-    let cellHeight = ScreenHeight * 0.45
-    
+        
     weak var delegate: DetailViewControllerDelegate?
     
     override func prefersStatusBarHidden() -> Bool {
@@ -32,7 +30,7 @@ class DetailViewController: UIViewController, ActionDelegate, UserDefaults {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.backgroundColor()
         navigationController?.navigationBar.barTintColor = UIColor.colorOfStatus(action[1])
         saveColorStatusOfBar(action[1])
         title = action[2]
@@ -40,7 +38,10 @@ class DetailViewController: UIViewController, ActionDelegate, UserDefaults {
 //        let titleItem = UIBarButtonItem(customView: TitleLabel(text: action[2]))
 //        navigationItem.leftBarButtonItem = titleItem
         
-        let statusButton = UIBarButtonItem(title: action[1], style: .Plain, target: self, action: #selector(changeStatus))
+        let backButton = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(quit))
+        navigationItem.leftBarButtonItem = backButton
+        
+        let statusButton = UIBarButtonItem(image: imageOfStatus(action[1]), style: .Plain, target: self, action: #selector(changeStatus))
         navigationItem.rightBarButtonItem = statusButton
         
         contentLabels = [3, 4, 5].map({
@@ -48,6 +49,7 @@ class DetailViewController: UIViewController, ActionDelegate, UserDefaults {
         })
    
         tableView = UITableView(frame: view.bounds)
+        tableView.backgroundColor = UIColor.backgroundColor()
         tableView.frame.size.height -= 64
         tableView.separatorStyle = .None
         tableView.dataSource = self
@@ -59,17 +61,13 @@ class DetailViewController: UIViewController, ActionDelegate, UserDefaults {
         view.addSubview(tableView)
     }
     
-    
-    func quit() {
-        dismissViewControllerAnimated(true, completion: nil)
+    func imageOfStatus(status: String) -> UIImage {
+        return UIImage(named: "step" + status)!
     }
     
-    func saveAndQuit() {
-        let action: [String] = ["", self.action[1], self.action[2], textView.text, "", ""]
-        saveAction(action) {
-            self.delegate?.actionDidSave()
-            self.quit()
-        }
+    
+    func quit() {
+        navigationController?.popViewControllerAnimated(true)
     }
     
     func changeStatus() {
@@ -88,6 +86,7 @@ class DetailViewController: UIViewController, ActionDelegate, UserDefaults {
     func statusChanged(status: String) {
         action[1] = status
         navigationController?.navigationBar.barTintColor = UIColor.colorOfStatus(action[1])
+        navigationItem.rightBarButtonItem!.image = imageOfStatus(action[1])
         tableView.reloadData()
         
         editAction(action)
@@ -119,16 +118,16 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return ["GOALS", "RESULTS", "CONCLUSION"][section]
+        return ["GOAL", "RESULT", "CONCLUSION"][section]
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label = UILabel(frame: CGRectMake(0, 0, 30, ScreenWidth))
-        label.backgroundColor = tableView.backgroundColor
+        label.backgroundColor = UIColor.backgroundColor()
         label.textColor = UIColor.lightGrayColor()
         label.font = UIFont.systemFontOfSize(14)
         label.textAlignment = .Center
-        label.text = ["GOALS", "OUTCOMES", "LESSONS"][section]
+        label.text = ["GOAL", "OUTCOME", "LESSON"][section]
         return label
     }
     
@@ -140,7 +139,10 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .Default, reuseIdentifier: nil)
+        cell.backgroundColor = UIColor.backgroundColor()
         cell.contentView.addSubview(contentLabels[indexPath.section])
+        cell.selectedBackgroundView = UIView()
+        cell.selectedBackgroundView?.backgroundColor = MyColor.code(1).BTColors[0]
         return cell
     }
     

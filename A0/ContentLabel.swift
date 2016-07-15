@@ -15,6 +15,7 @@ class ContentLabel: UILabel {
     init(text: String, status: String) {
         super.init(frame: CGRectMake(10, 5, ScreenWidth - 20, 100))
         self.status = status
+        backgroundColor = UIColor.backgroundColor()
         numberOfLines = 0
         setContent(text)
     }
